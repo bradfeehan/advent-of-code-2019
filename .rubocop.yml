@@ -1,2 +1,8 @@
 Layout/HashAlignment:
   EnforcedHashRocketStyle: table
+
+Metrics/AbcSize:
+  Max: 20
+
+Metrics/MethodLength:
+  Max: 20
