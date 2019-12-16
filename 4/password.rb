@@ -26,7 +26,6 @@ candidates.select! do |value|
   s = value.to_s
   s.gsub!(/(1{3,}|2{3,}|3{3,}|4{3,}|5{3,}|6{3,}|7{3,}|8{3,}|9{3,})/, '')
   d = s.to_s.each_char
-  puts d if d.count < 6
   d.each_cons(2).any? { |a, b| a == b }
 end
 
