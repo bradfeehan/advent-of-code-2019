@@ -19,11 +19,15 @@ end
 
 memory.freeze
 
-results = (0..4).to_a.permutation.map do |phases|
-  amplifiers = Intcode::AmplifierChain.new(memory: memory, phases: phases)
-  [amplifiers.call(0), phases]
+ranges = [(0..4), (5..9)]
+
+ranges.each do |range|
+  results = range.to_a.permutation.map do |phases|
+    amplifiers = Intcode::AmplifierChain.new(memory: memory, phases: phases)
+    [amplifiers.call(0), phases]
+  end
+
+  max_thrust, max_phases = results.max_by { |output, _| output }
+
+  puts "Max thrust #{max_thrust} (phases #{max_phases})"
 end
-
-max_thrust, max_phases = results.max_by { |output, _| output }
-
-puts "Max thrust #{max_thrust} (phases #{max_phases})"

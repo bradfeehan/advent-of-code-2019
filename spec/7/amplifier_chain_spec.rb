@@ -13,7 +13,7 @@ RSpec.describe Intcode::AmplifierChain do
       [3, 15, 3, 16, 1002, 16, 10, 16, 1, 16, 15, 15, 4, 15, 99, 0, 0]
     end
 
-    it { is_expected.to eq '43210' }
+    it { is_expected.to eq 43210 }
   end
 
   context 'with example 2' do
@@ -25,7 +25,7 @@ RSpec.describe Intcode::AmplifierChain do
       ]
     end
 
-    it { is_expected.to eq '54321' }
+    it { is_expected.to eq 54321 }
   end
 
   context 'with example 3' do
@@ -37,6 +37,6 @@ RSpec.describe Intcode::AmplifierChain do
       ]
     end
 
-    it { is_expected.to eq '65210' }
+    it { is_expected.to eq 65210 }
   end
 end

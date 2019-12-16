@@ -18,7 +18,6 @@ module Intcode
       end
 
       @end = stdin
-      @output = StringIO.new
     end
 
     def call(input)
@@ -28,16 +27,17 @@ module Intcode
 
       # Create tee
       threads << Thread.new do
-        line = @end.gets
-        @input.puts(line) unless @amps.first.stdin.closed?
-        @output.puts(line)
+        until (line = @end.gets).nil?
+          @output = line.chomp
+          @input.puts(line) unless @amps.first.stdin.closed?
+        end
       end
 
       threads += @amps.map { |amplifier| Thread.new { amplifier.call } }
 
       threads.each(&:join)
 
-      @output.string.chomp
+      Integer(@output)
     end
   end
 end
