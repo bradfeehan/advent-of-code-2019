@@ -1,20 +1,30 @@
 # frozen_string_literal: true
 
+require 'forwardable'
+
 require_relative 'instruction'
 require_relative 'parameter'
 
 module Intcode
   # Represents an Intcode CPU initialized with a given memory contents
   class Computer
+    extend Forwardable
+
     attr_reader :memory
     attr_accessor :instruction_pointer
     alias m memory
     alias ip instruction_pointer
     alias ip= instruction_pointer=
 
-    def initialize(memory)
+    delegate %i[puts] => :@stdout
+    delegate %i[gets] => :@stdin
+
+    def initialize(memory, stdout: $stdout, stderr: $stderr, stdin: $stdin)
       @memory = memory
       @instruction_pointer = 0
+      @stdout = stdout
+      @stderr = stderr
+      @stdin = stdin
     end
 
     def run
