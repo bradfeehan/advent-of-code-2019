@@ -12,26 +12,33 @@ module Intcode
     attr_reader :operation, :parameters
     delegate %i[length opcode] => :operation
 
-    def initialize(operation, parameters)
+    def initialize(operation, parameters, computer:)
       @operation = operation
       @parameters = parameters
+      @computer = computer
     end
 
-    def execute(computer)
-      operation.execute(parameters, computer)
-    end
-
-    def mnemonic
-      operation.mnemonic % parameters
+    def execute
+      operation.execute(parameters, @computer)
     end
 
     def to_s
+      operation.mnemonic % parameter_mnemonics
+    end
+
+    def inspect
       [
         "#<#{self.class}",
-        "'#{mnemonic}'",
+        "'#{self}'",
         "opcode=#{opcode}",
-        "parameters=#{parameters.join(',')}>"
+        "parameters=#{parameter_mnemonics.join(',')}>"
       ].join(' ')
+    end
+
+    private
+
+    def parameter_mnemonics
+      parameters.map(&:mnemonic)
     end
   end
 end
