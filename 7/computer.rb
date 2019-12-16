@@ -10,7 +10,7 @@ module Intcode
   class Computer
     extend Forwardable
 
-    attr_reader :memory
+    attr_reader :memory, :name
     attr_accessor :instruction_pointer
     alias m memory
     alias ip instruction_pointer
@@ -19,7 +19,8 @@ module Intcode
     delegate %i[puts] => :@stdout
     delegate %i[gets] => :@stdin
 
-    def initialize(memory, stdout: $stdout, stderr: $stderr, stdin: $stdin)
+    def initialize(name, memory, stdout: $stdout, stderr: $stderr, stdin: $stdin)
+      @name = name
       @memory = memory
       @instruction_pointer = 0
       @stdout = stdout
@@ -32,14 +33,18 @@ module Intcode
         loop do
           instruction = decode(fetch_instruction_data)
 
-          warn memory.inspect
-          warn "@#{instruction_pointer} => #{instruction}"
+          warn "#{name}: #{memory.inspect}"
+          warn "#{name}: @#{instruction_pointer} => #{instruction}"
 
           @instruction_pointer += instruction.length
           instruction.execute
         end
       end
-      warn memory.inspect
+      warn "#{name} done: #{memory.inspect}"
+
+      @stdout.close unless @stdout == $stdout
+      @stderr.close unless @stderr == $stderr
+      @stdin.close unless @stdin == $stdin
     end
 
     private

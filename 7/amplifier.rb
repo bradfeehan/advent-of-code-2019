@@ -5,28 +5,23 @@ require_relative 'computer'
 module Intcode
   # Represents a single amplifier in the chain
   class Amplifier
-    def initialize(memory:, phase:)
+    attr_reader :name, :stdin, :stdout
+
+    def initialize(name, memory:, stdin:, stdout:)
+      @name = name
       @memory = memory.dup
-      @phase = phase
+      @stdin = stdin
+      @stdout = stdout
     end
 
-    def call(input)
-      computer(input).run
-      stdout.string.chomp
+    def call
+      computer.run
     end
 
     private
 
-    def computer(input)
-      Computer.new(@memory.dup, stdout: stdout, stdin: stdin(input))
-    end
-
-    def stdout
-      @stdout ||= StringIO.new
-    end
-
-    def stdin(input)
-      StringIO.new([@phase, input].map { |line| line.to_s + "\n" }.join)
+    def computer
+      Computer.new(name, @memory.dup, stdout: @stdout, stdin: @stdin)
     end
   end
 end
