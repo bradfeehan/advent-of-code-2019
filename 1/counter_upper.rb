@@ -11,19 +11,26 @@ abort "Usage: #{$PROGRAM_NAME} <inputfile>" unless ARGV.count == 1
 
 input_file = ARGV.first
 
-def fuel_for(mass)
+def fuel_for(mass, including_fuel: false)
   return 0 if mass <= 0
 
   fuel = (mass / 3).floor - 2
-  fuel_for_fuel = [0, fuel_for(fuel)].max
+  return fuel unless including_fuel
+
+  fuel_for_fuel = [0, fuel_for(fuel, including_fuel: including_fuel)].max
   fuel + fuel_for_fuel
 end
 
-fuel = File.open input_file do |file|
-  file.each_line.reduce(0) do |sum, line|
+modules_fuel = 0
+total_fuel = 0
+
+File.open input_file do |file|
+  file.each_line do |line|
     mass = Integer(line)
-    sum + fuel_for(mass)
+    modules_fuel += fuel_for(mass)
+    total_fuel += fuel_for(mass, including_fuel: true)
   end
 end
 
-puts "Fuel required for modules: #{fuel}"
+puts "Fuel required for modules: #{modules_fuel}"
+puts "Total fuel required: #{total_fuel}"
