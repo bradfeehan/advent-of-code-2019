@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-module Intcode
+module Intcode5
   # Represents a type of operation
   class Operation
     OPCODE_LENGTH = 1

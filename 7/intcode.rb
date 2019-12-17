@@ -23,7 +23,7 @@ ranges = [(0..4), (5..9)]
 
 ranges.each do |range|
   results = range.to_a.permutation.map do |phases|
-    amplifiers = Intcode::AmplifierChain.new(memory: memory, phases: phases)
+    amplifiers = Intcode7::AmplifierChain.new(memory: memory, phases: phases)
     [amplifiers.call(0), phases]
   end
 

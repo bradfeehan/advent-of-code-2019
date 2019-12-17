@@ -2,7 +2,7 @@
 
 require_relative 'amplifier'
 
-module Intcode
+module Intcode7
   # Represents a chain of amplifiers
   class AmplifierChain
     def initialize(memory:, phases:)

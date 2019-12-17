@@ -2,7 +2,7 @@
 
 require File.join(ROOT, '2', 'calculator')
 
-RSpec.describe Intcode::Calculator do
+RSpec.describe Intcode2::Calculator do
   let(:calculator) { described_class.new(input_file: input_txt) }
 
   subject(:calculation) { calculator.result(noun: noun, verb: verb) }

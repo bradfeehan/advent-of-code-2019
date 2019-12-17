@@ -17,6 +17,6 @@ memory = File.open(ARGV.first) do |file|
   file.each_line(',').map { |value| Integer(value.chomp(',')) }
 end
 
-computer = Intcode::Computer.new(memory)
+computer = Intcode5::Computer.new(memory)
 
 computer.run

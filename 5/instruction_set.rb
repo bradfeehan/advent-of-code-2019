@@ -2,7 +2,7 @@
 
 require_relative 'operation'
 
-module Intcode # rubocop:disable Style/Documentation
+module Intcode5 # rubocop:disable Style/Documentation
   class << self
     private
 

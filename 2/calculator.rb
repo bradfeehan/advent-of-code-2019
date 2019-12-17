@@ -2,7 +2,7 @@
 
 require_relative 'computer'
 
-module Intcode
+module Intcode2
   # Represents a calculation done with an Intcode program
   class Calculator
     def initialize(input_file:)

@@ -2,7 +2,7 @@
 
 require_relative 'instruction'
 
-module Intcode
+module Intcode2
   # Represents an Intcode CPU initialized with a given memory contents
   class Computer
     attr_reader :memory

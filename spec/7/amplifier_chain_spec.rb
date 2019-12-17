@@ -2,7 +2,7 @@
 
 require File.join(ROOT, '7', 'amplifier_chain')
 
-RSpec.describe Intcode::AmplifierChain do
+RSpec.describe Intcode7::AmplifierChain do
   let(:amplifiers) { described_class.new(memory: memory, phases: phases) }
 
   subject { amplifiers.call(0) }

@@ -2,7 +2,7 @@
 
 require_relative 'instruction_set'
 
-module Intcode
+module Intcode7
   # Represents a single Intcode instruction
   class Instruction
     extend Forwardable

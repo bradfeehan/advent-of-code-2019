@@ -5,7 +5,7 @@ require 'forwardable'
 require_relative 'instruction'
 require_relative 'parameter'
 
-module Intcode
+module Intcode7
   # Represents an Intcode CPU initialized with a given memory contents
   class Computer
     extend Forwardable

@@ -2,7 +2,7 @@
 
 require File.join(ROOT, '2', 'computer')
 
-RSpec.describe Intcode::Computer do
+RSpec.describe Intcode2::Computer do
   let(:computer) { described_class.new(initial_memory) }
 
   before { computer.run }

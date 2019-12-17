@@ -13,7 +13,7 @@ abort "Usage: #{$PROGRAM_NAME} <inputfile>" unless ARGV.count == 1
 
 require_relative 'calculator'
 
-calculator = Intcode::Calculator.new input_file: ARGV.first
+calculator = Intcode2::Calculator.new input_file: ARGV.first
 # puts calculator.result(noun: 12, verb: 2)
 
 target = 19_690_720
@@ -27,7 +27,7 @@ target = 19_690_720
       $stdout.puts "noun=#{noun}, verb=#{verb}: result=#{result}"
       break
     end
-  rescue Intcode::InstructionSet::UnknownOpcodeError => e
+  rescue Intcode2::InstructionSet::UnknownOpcodeError => e
     warn e
   end
 end

@@ -2,7 +2,7 @@
 
 require 'forwardable'
 
-module Intcode
+module Intcode7
   # Represents an Intcode parameter and mode
   class Parameter
     extend Forwardable

@@ -2,7 +2,7 @@
 
 require_relative 'computer'
 
-module Intcode
+module Intcode7
   # Represents a single amplifier in the chain
   class Amplifier
     attr_reader :name, :stdin, :stdout
