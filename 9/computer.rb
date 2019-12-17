@@ -1,8 +1,10 @@
 # frozen_string_literal: true
 
 require 'forwardable'
+require 'logger'
 
 require_relative 'instruction'
+require_relative 'memory'
 require_relative 'parameter'
 
 module Intcode9
@@ -11,20 +13,30 @@ module Intcode9
     extend Forwardable
 
     attr_reader :memory
-    attr_accessor :instruction_pointer
+    attr_accessor :instruction_pointer, :relative_offset
     alias m memory
     alias ip instruction_pointer
     alias ip= instruction_pointer=
+    alias ro relative_offset
+    alias ro= relative_offset=
 
     delegate %i[puts] => :@stdout
     delegate %i[gets] => :@stdin
 
-    def initialize(memory, stdout: $stdout, stderr: $stderr, stdin: $stdin)
-      @memory = memory
+    def initialize(
+      memory_data,
+      stdout: $stdout,
+      stderr: $stderr,
+      stdin: $stdin,
+      logger: Logger.new($stderr, level: :info)
+    )
+      @memory = Memory.new(memory_data)
       @instruction_pointer = 0
+      @relative_offset = 0
       @stdout = stdout
       @stderr = stderr
       @stdin = stdin
+      @logger = logger
     end
 
     def run
@@ -32,14 +44,14 @@ module Intcode9
         loop do
           instruction = decode(fetch_instruction_data)
 
-          warn memory.inspect
-          warn "@#{instruction_pointer} => #{instruction}"
+          @logger.debug { memory.inspect }
+          @logger.debug { "@#{instruction_pointer} => #{instruction}" }
 
           @instruction_pointer += instruction.length
           instruction.execute
         end
       end
-      warn memory.inspect
+      @logger.debug { memory.inspect }
     end
 
     private

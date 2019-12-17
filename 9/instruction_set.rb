@@ -43,6 +43,7 @@ module Intcode9 # rubocop:disable Style/Documentation
     6  => op(6, 'JPF %s?->%s') { |c, d| self.ip = d.read if c.zero? },
     7  => op(7, 'LT %s<%s->%s') { |a, b, d| d.write(a < b ? 1 : 0) },
     8  => op(8, 'EQ %s=%s->%s') { |a, b, d| d.write(a == b ? 1 : 0) },
+    9  => op(9, 'REL %s') { |d| self.ro += d.read },
     99 => op(99, 'HALT') { throw(:break) }
   )
 end
