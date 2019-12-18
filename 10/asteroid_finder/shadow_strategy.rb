@@ -8,8 +8,10 @@ module AsteroidFinder
   # Fairly inefficient as it ends up calculating a lot of coordinates where the
   # shadow falls even though there might be no asteroid there.
   class ShadowStrategy < Base
+    delegate %i[within_bounds?] => :@map
+
     def asteroids_with_visible
-      @asteroids_with_visible ||= asteroids.map do |candidate|
+      asteroids.map do |candidate|
         others = (asteroids - [candidate])
         visible = Set.new(others)
 
@@ -19,11 +21,16 @@ module AsteroidFinder
           offset = offset(from: candidate, to: blocker)
           iterations = iterations_required(blocker, offset)
 
-          blocked = iterations.times.map(&:succ).map do |index|
+          maybe_blocked = iterations.times.map(&:succ).map do |index|
             [blocker[0] + offset[0] * index, blocker[1] + offset[1] * index]
           end
 
-          visible.subtract(blocked.select { |pos| within_bounds?(pos) })
+          blocked =
+            maybe_blocked
+            .select { |pos| within_bounds?(pos) }
+            .select { |pos| get(pos) == '#' }
+
+          visible.subtract(blocked)
         end
 
         [candidate, visible.to_a]
@@ -31,12 +38,6 @@ module AsteroidFinder
     end
 
     private
-
-    def within_bounds?(coordinate)
-      return false if coordinate.any?(&:negative?)
-
-      coordinate[0] < columns || coordinate[1] < rows
-    end
 
     def iterations_required(blocker, offset)
       vertical_space = offset[1].positive? ? rows - blocker[1] : blocker[1]

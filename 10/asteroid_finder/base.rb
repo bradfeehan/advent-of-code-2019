@@ -7,33 +7,15 @@ module AsteroidFinder
   class Base
     extend Forwardable
 
-    delegate %i[rows columns lines []] => :@map
+    delegate %i[asteroids rows columns lines [] get] => :@map
 
     def initialize(map)
       @map = map
       raise NotImplementedError if self.class == Base
     end
 
-    def monitoring_station
-      monitoring_station_with_visible.first
-    end
-
-    def visible_from_monitoring_station
-      monitoring_station_with_visible[1]
-    end
-
     def monitoring_station_with_visible
-      @monitoring_station_with_visible ||=
-        asteroids_with_visible.max_by { |_, v| v.count }
-    end
-
-    def asteroids
-      @asteroids ||= lines.each_with_index.flat_map do |line, row|
-        line
-          .each_with_index
-          .select { |cell, _column| cell == '#' }
-          .map { |_cell, column| [column, row] }
-      end
+      asteroids_with_visible.max_by { |_, v| v.count }
     end
 
     private

@@ -13,8 +13,9 @@ abort "Usage: #{$PROGRAM_NAME} <inputfile>" unless ARGV.count == 1
 
 require_relative 'asteroid_map'
 
-map = AsteroidMap.new(ARGV.first)
+map = AsteroidMap.new(ARGV.first, strategy: :blocker)
 
-puts "Best monitoring station: #{map.monitoring_station}"
-count = map.visible_from_monitoring_station.count
-puts "Visible asteroids (#{count}): #{map.visible_from_monitoring_station}"
+station, visible = map.monitoring_station_with_visible
+
+puts "Best monitoring station: #{station}"
+puts "Visible asteroids (#{visible.count}): #{visible}"
