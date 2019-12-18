@@ -12,9 +12,8 @@ RSpec.describe AsteroidMap do
       let(:input_txt) { File.join(ROOT, 'spec', '10', 'example_1.txt') }
       its(:rows) { is_expected.to eq 5 }
       its(:columns) { is_expected.to eq 5 }
-      its(:monitoring_station_with_visible) do
-        is_expected.to match [[3, 4], have(8).items]
-      end
+      its(:monitoring_station) { is_expected.to eq [3, 4] }
+      its(:visible_from_monitoring_station) { is_expected.to have(8).items }
       its(:asteroids) { is_expected.to have(10).items }
       its(:asteroids) do
         is_expected.to contain_exactly(
@@ -48,9 +47,8 @@ RSpec.describe AsteroidMap do
       its(:rows) { is_expected.to eq 10 }
       its(:columns) { is_expected.to eq 10 }
       its(:asteroids) { is_expected.to have(40).items }
-      its(:monitoring_station_with_visible) do
-        is_expected.to match [[5, 8], have(33).items]
-      end
+      its(:monitoring_station) { is_expected.to eq [5, 8] }
+      its(:visible_from_monitoring_station) { is_expected.to have(33).items }
     end
 
     context 'with example input 3' do
@@ -58,9 +56,8 @@ RSpec.describe AsteroidMap do
       its(:rows) { is_expected.to eq 10 }
       its(:columns) { is_expected.to eq 10 }
       its(:asteroids) { is_expected.to have(40).items }
-      its(:monitoring_station_with_visible) do
-        is_expected.to match [[1, 2], have(35).items]
-      end
+      its(:monitoring_station) { is_expected.to eq [1, 2] }
+      its(:visible_from_monitoring_station) { is_expected.to have(35).items }
     end
 
     context 'with example input 4' do
@@ -68,9 +65,8 @@ RSpec.describe AsteroidMap do
       its(:rows) { is_expected.to eq 10 }
       its(:columns) { is_expected.to eq 10 }
       its(:asteroids) { is_expected.to have(50).items }
-      its(:monitoring_station_with_visible) do
-        is_expected.to match [[6, 3], have(41).items]
-      end
+      its(:monitoring_station) { is_expected.to eq [6, 3] }
+      its(:visible_from_monitoring_station) { is_expected.to have(41).items }
     end
 
     context 'with example input 5' do
@@ -78,9 +74,8 @@ RSpec.describe AsteroidMap do
       its(:rows) { is_expected.to eq 20 }
       its(:columns) { is_expected.to eq 20 }
       its(:asteroids) { is_expected.to have(300).items }
-      its(:monitoring_station_with_visible) do
-        is_expected.to match [[11, 13], have(210).items]
-      end
+      its(:monitoring_station) { is_expected.to eq [11, 13] }
+      its(:visible_from_monitoring_station) { is_expected.to have(210).items }
     end
 
     context 'with puzzle input' do
@@ -88,9 +83,8 @@ RSpec.describe AsteroidMap do
       its(:rows) { is_expected.to eq 48 }
       its(:columns) { is_expected.to eq 48 }
       its(:asteroids) { is_expected.to have(346).items }
-      its(:monitoring_station_with_visible) do
-        is_expected.to match [[37, 25], have(309).items]
-      end
+      its(:monitoring_station) { is_expected.to eq [37, 25] }
+      its(:visible_from_monitoring_station) { is_expected.to have(309).items }
     end
   end
 
@@ -101,9 +95,8 @@ RSpec.describe AsteroidMap do
       let(:input_txt) { File.join(ROOT, 'spec', '10', 'example_1.txt') }
       its(:rows) { is_expected.to eq 5 }
       its(:columns) { is_expected.to eq 5 }
-      its(:monitoring_station_with_visible) do
-        is_expected.to match [[3, 4], have(8).items]
-      end
+      its(:monitoring_station) { is_expected.to eq [3, 4] }
+      its(:visible_from_monitoring_station) { is_expected.to have(8).items }
       its(:asteroids) { is_expected.to have(10).items }
       its(:asteroids) do
         is_expected.to contain_exactly(
@@ -137,9 +130,8 @@ RSpec.describe AsteroidMap do
       its(:rows) { is_expected.to eq 10 }
       its(:columns) { is_expected.to eq 10 }
       its(:asteroids) { is_expected.to have(40).items }
-      its(:monitoring_station_with_visible) do
-        is_expected.to match [[5, 8], have(33).items]
-      end
+      its(:monitoring_station) { is_expected.to eq [5, 8] }
+      its(:visible_from_monitoring_station) { is_expected.to have(33).items }
     end
 
     context 'with example input 3' do
@@ -147,9 +139,8 @@ RSpec.describe AsteroidMap do
       its(:rows) { is_expected.to eq 10 }
       its(:columns) { is_expected.to eq 10 }
       its(:asteroids) { is_expected.to have(40).items }
-      its(:monitoring_station_with_visible) do
-        is_expected.to match [[1, 2], have(35).items]
-      end
+      its(:monitoring_station) { is_expected.to eq [1, 2] }
+      its(:visible_from_monitoring_station) { is_expected.to have(35).items }
     end
 
     context 'with example input 4' do
@@ -157,9 +148,8 @@ RSpec.describe AsteroidMap do
       its(:rows) { is_expected.to eq 10 }
       its(:columns) { is_expected.to eq 10 }
       its(:asteroids) { is_expected.to have(50).items }
-      its(:monitoring_station_with_visible) do
-        is_expected.to match [[6, 3], have(41).items]
-      end
+      its(:monitoring_station) { is_expected.to eq [6, 3] }
+      its(:visible_from_monitoring_station) { is_expected.to have(41).items }
     end
 
     context 'with example input 5' do
@@ -167,9 +157,8 @@ RSpec.describe AsteroidMap do
       its(:rows) { is_expected.to eq 20 }
       its(:columns) { is_expected.to eq 20 }
       its(:asteroids) { is_expected.to have(300).items }
-      its(:monitoring_station_with_visible) do
-        is_expected.to match [[11, 13], have(210).items]
-      end
+      its(:monitoring_station) { is_expected.to eq [11, 13] }
+      its(:visible_from_monitoring_station) { is_expected.to have(210).items }
     end
 
     context 'with puzzle input' do
@@ -177,9 +166,8 @@ RSpec.describe AsteroidMap do
       its(:rows) { is_expected.to eq 48 }
       its(:columns) { is_expected.to eq 48 }
       its(:asteroids) { is_expected.to have(346).items }
-      its(:monitoring_station_with_visible) do
-        is_expected.to match [[37, 25], have(309).items]
-      end
+      its(:monitoring_station) { is_expected.to eq [37, 25] }
+      its(:visible_from_monitoring_station) { is_expected.to have(309).items }
     end
   end
 end

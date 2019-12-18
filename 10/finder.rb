@@ -19,3 +19,4 @@ station, visible = map.monitoring_station_with_visible
 
 puts "Best monitoring station: #{station}"
 puts "Visible asteroids (#{visible.count}): #{visible}"
+puts "200th vaporized asteroid: #{map.laser_order[199]}"

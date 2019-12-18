@@ -5,6 +5,7 @@ require 'set'
 
 require_relative 'asteroid_finder/shadow_strategy'
 require_relative 'asteroid_finder/blocker_strategy'
+require_relative 'asteroid_laser'
 
 # Represents a map of asteroids
 class AsteroidMap
@@ -12,10 +13,13 @@ class AsteroidMap
 
   FINDER_METHODS = %i[
     asteroids_with_visible
+    monitoring_station
     monitoring_station_with_visible
-  ]
+    visible_from_monitoring_station
+  ].freeze
 
   delegate FINDER_METHODS => :asteroid_finder
+  delegate %i[asteroids_by_angle laser_order] => :asteroid_laser
 
   attr_reader :rows, :columns, :lines
 
@@ -46,7 +50,7 @@ class AsteroidMap
   end
 
   def asteroids
-    lines.each_with_index.flat_map do |line, row|
+    @asteroids ||= lines.each_with_index.flat_map do |line, row|
       line
         .each_with_index
         .select { |cell, _column| cell == '#' }
@@ -64,6 +68,10 @@ class AsteroidMap
 
   def asteroid_finder
     @asteroid_finder ||= strategy_class.new(self)
+  end
+
+  def asteroid_laser
+    @asteroid_laser ||= AsteroidLaser.new(self)
   end
 
   def strategy_class

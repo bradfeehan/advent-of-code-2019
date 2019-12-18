@@ -9,16 +9,13 @@ module AsteroidFinder
   # asteroid for a potential blocker.
   class BlockerStrategy < Base
     def asteroids_with_visible
-      asteroids.map do |candidate|
-        others = (asteroids - [candidate])
-        visible = others.reject do |viewed|
+      @asteroids_with_visible ||= asteroids.map do |candidate|
+        visible = (asteroids - [candidate]).reject do |viewed|
           offset = offset(from: candidate, to: viewed)
           iterations = iterations_required(offset, from: candidate, to: viewed)
-          iterations -= 1
-          next if iterations.zero?
 
-          blockables = iterations.times.map(&:succ).map do |index|
-            [candidate[0] + offset[0] * index, candidate[1] + offset[1] * index]
+          blockables = iterations.times.map do |index|
+            add_offset(offset, to: candidate, count: index + 1)
           end
 
           blockables.any? { |pos| get(pos) == '#' }
@@ -35,9 +32,9 @@ module AsteroidFinder
       horizontal = to[0] - from[0]
 
       if horizontal.zero?
-        vertical / offset[1]
+        vertical / offset[1] - 1
       else
-        horizontal / offset[0]
+        horizontal / offset[0] - 1
       end
     end
   end
