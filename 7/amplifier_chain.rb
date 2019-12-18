@@ -1,18 +1,28 @@
 # frozen_string_literal: true
 
+require 'logger'
+
 require_relative 'amplifier'
 
 module Intcode7
   # Represents a chain of amplifiers
   class AmplifierChain
-    def initialize(memory:, phases:)
+    def initialize(memory:, phases:, logger: Logger.new($stderr, level: :info))
+      @logger = logger
+
       stdin, stdout = IO.pipe
       @input = stdout
 
       @amps = phases.each_with_index.map do |phase, index|
         stdout.puts(phase)
         next_stdin, stdout = IO.pipe
-        amp = Amplifier.new(index, memory: memory, stdin: stdin, stdout: stdout)
+        amp = Amplifier.new(
+          index,
+          memory: memory,
+          stdin: stdin,
+          stdout: stdout,
+          logger: logger
+        )
         stdin = next_stdin
         amp
       end

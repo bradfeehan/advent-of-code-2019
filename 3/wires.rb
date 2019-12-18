@@ -2,6 +2,8 @@
 #
 # frozen_string_literal: true
 
+require 'logger'
+
 require_relative 'point'
 require_relative 'step'
 
@@ -10,7 +12,10 @@ def abort(message, status: 1)
   exit status
 end
 
-abort "Usage: #{$PROGRAM_NAME} <inputfile>" unless ARGV.count == 1
+abort "Usage: #{$PROGRAM_NAME} [-v] <input>" unless (1..2).include?(ARGV.count)
+
+logger_level = ARGV.delete('-v').nil? ? :info : :debug
+logger = Logger.new($stderr, level: logger_level)
 
 wires = File.open(ARGV.first) do |file|
   file.each_line.map(&:chomp).map do |line|
@@ -40,7 +45,7 @@ a_wire.each_cons(2) do |a1, a2|
     intersection = a_edge.intersection(b_edge)
     next if intersection.nil? || intersection.origin?
 
-    warn "Found intersection #{a_edge}, #{b_edge}"
+    logger.debug { "Found intersection #{a_edge}, #{b_edge}" }
 
     a_edge_to_intersection = a1.to(intersection)
     b_edge_to_intersection = b1.to(intersection)
@@ -61,7 +66,7 @@ results = crossing.map do |a, b, a_steps, b_steps, intersection|
   ].join('; ')
 end
 
-warn results
+logger.debug { results }
 
 closest = crossing.map(&:last).min_by(&:manhattan)
 puts "Closest to origin: #{closest}, Manhattan distance: #{closest.manhattan}"

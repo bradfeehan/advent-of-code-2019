@@ -1,12 +1,15 @@
 # frozen_string_literal: true
 
+require 'logger'
+
 require_relative 'computer'
 
-module Intcode7
+module Intcode5
   # Represents a calculation done with an Intcode program
   class Calculator
-    def initialize(input_file:)
+    def initialize(input_file:, logger: Logger.new($stderr, level: :info))
       @input_file = input_file
+      @logger = logger
     end
 
     def result(noun:, verb:)
@@ -18,7 +21,7 @@ module Intcode7
     private
 
     def computer(noun, verb)
-      Computer.new(initial_memory.dup).tap do |computer|
+      Computer.new(initial_memory.dup, logger: @logger).tap do |computer|
         computer.memory[1] = noun
         computer.memory[2] = verb
       end

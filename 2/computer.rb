@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'logger'
+
 require_relative 'instruction'
 
 module Intcode2
@@ -8,8 +10,9 @@ module Intcode2
     attr_reader :memory
     alias m memory
 
-    def initialize(memory)
+    def initialize(memory, logger: Logger.new($stderr, level: :info))
       @memory = memory
+      @logger = logger
       @instruction_pointer = 0
     end
 
@@ -19,12 +22,12 @@ module Intcode2
           instruction = decode(fetch_instruction_data)
           @instruction_pointer += instruction.length
 
-          warn memory.inspect
-          warn instruction
+          @logger.debug { memory.inspect }
+          @logger.debug { instruction }
           instruction.execute(self)
         end
       end
-      warn memory.inspect
+      @logger.debug { memory.inspect }
     end
 
     private

@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'forwardable'
+require 'logger'
 
 require_relative 'instruction'
 require_relative 'parameter'
@@ -19,12 +20,19 @@ module Intcode5
     delegate %i[puts] => :@stdout
     delegate %i[gets] => :@stdin
 
-    def initialize(memory, stdout: $stdout, stderr: $stderr, stdin: $stdin)
+    def initialize(
+      memory,
+      stdout: $stdout,
+      stderr: $stderr,
+      stdin: $stdin,
+      logger: Logger.new($stderr, level: :info)
+    )
       @memory = memory
       @instruction_pointer = 0
       @stdout = stdout
       @stderr = stderr
       @stdin = stdin
+      @logger = logger
     end
 
     def run
@@ -32,14 +40,14 @@ module Intcode5
         loop do
           instruction = decode(fetch_instruction_data)
 
-          warn memory.inspect
-          warn "@#{instruction_pointer} => #{instruction}"
+          @logger.debug { memory.inspect }
+          @logger.debug { "@#{instruction_pointer} => #{instruction}" }
 
           @instruction_pointer += instruction.length
           instruction.execute
         end
       end
-      warn memory.inspect
+      @logger.debug { memory.inspect }
     end
 
     private

@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'logger'
+
 require_relative 'computer'
 
 module Intcode7
@@ -7,11 +9,18 @@ module Intcode7
   class Amplifier
     attr_reader :name, :stdin, :stdout
 
-    def initialize(name, memory:, stdin:, stdout:)
+    def initialize(
+      name,
+      memory:,
+      stdin:,
+      stdout:,
+      logger: Logger.new($stderr, level: :info)
+    )
       @name = name
       @memory = memory.dup
       @stdin = stdin
       @stdout = stdout
+      @logger = logger
     end
 
     def call
@@ -21,7 +30,13 @@ module Intcode7
     private
 
     def computer
-      Computer.new(name, @memory.dup, stdout: @stdout, stdin: @stdin)
+      Computer.new(
+        name,
+        @memory.dup,
+        stdout: @stdout,
+        stdin: @stdin,
+        logger: @logger
+      )
     end
   end
 end

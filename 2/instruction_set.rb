@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require 'forwardable'
+
 require_relative 'operation'
 
 module Intcode2 # rubocop:disable Style/Documentation
