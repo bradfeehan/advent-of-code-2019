@@ -3,7 +3,7 @@
 require 'logger'
 
 require_relative 'canvas'
-require_relative '../9/computer'
+require_relative '../09/computer'
 
 # Represents the Emergency Hull Painting Robot
 class PaintingRobot
