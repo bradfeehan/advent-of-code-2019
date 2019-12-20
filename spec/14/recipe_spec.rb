@@ -53,4 +53,9 @@ RSpec.describe NanoFactory::Recipe do
     let(:input_txt) { File.join(ROOT, 'spec', '14', 'example_5.txt') }
     its(:ore_for_target) { is_expected.to eq 2_210_736 }
   end
+
+  context 'with puzzle input' do
+    let(:input_txt) { File.join(ROOT, '14', 'input.txt') }
+    its(:ore_for_target) { is_expected.to eq 1_582_325 }
+  end
 end

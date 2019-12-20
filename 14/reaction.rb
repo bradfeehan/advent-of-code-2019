@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require_relative 'inventory'
+
 module NanoFactory
   # Represents a single reaction that the nanofactory can do
   class Reaction
@@ -17,8 +19,8 @@ module NanoFactory
     attr_reader :reactants, :product
 
     def initialize(reactants, product)
-      @reactants = reactants
-      @product = product
+      @reactants = NanoFactory::Inventory(reactants)
+      @product = NanoFactory::Inventory(product)
     end
 
     def makes?(type)
@@ -27,7 +29,7 @@ module NanoFactory
 
     def to_s
       sides = [reactants, product].map do |side|
-        side.map { |count, name| "#{count} #{name}" }.join(', ')
+        side.map { |type, count| "#{count} #{type}" }.join(', ')
       end
       sides.join(' => ')
     end
@@ -44,5 +46,9 @@ module NanoFactory
       end
     end
     alias eql? ==
+
+    def *(other)
+      self.class.new(reactants * other, product * other)
+    end
   end
 end

@@ -2,6 +2,7 @@
 
 require 'logger'
 
+require_relative 'inventory'
 require_relative 'reaction'
 
 module NanoFactory
@@ -19,7 +20,7 @@ module NanoFactory
 
     def initialize(reactions, target, logger: Logger.new($stderr, level: :info))
       @reactions = reactions
-      @target = target
+      @target = NanoFactory::Inventory(target)
       @logger = logger
     end
 
@@ -31,42 +32,34 @@ module NanoFactory
 
     def requirements_for_target
       @requirements_for_target ||= begin
-        inventory = Hash.new(0)
+        inventory = Inventory.new
         requirements = @target.dup
-        requirements.default = 0
 
-        until (target = remaining(requirements, inventory)).keys.all?(:ORE)
-          @logger.debug { "inventory: #{inventory}" }
-          @logger.debug { "requirements: #{requirements}" }
-          @logger.debug { "target: #{target}" }
-          target_type = target.keys.find { |type| type != :ORE }
-          reaction = reactions.find { |candidate| candidate.makes? target_type }
-          @logger.debug { "Reaction: #{reaction}" }
+        until (target = requirements.excluding(inventory)).types.all?(:ORE)
+          reaction = reactions.find do |candidate_reaction|
+            candidate_reaction.product.types.any? do |product_type|
+              target.types.include?(product_type)
+            end
+          end
 
           raise 'No possible reaction' if reaction.nil?
 
-          # Add the reactants to the requirements list
-          reaction.reactants.each do |reactant_type, reactant_count|
-            requirements[reactant_type] += reactant_count
+          # Repeat multiple times, enough for a product to meet a target
+          repetitions = reaction.product.map do |product_type, product_count|
+            (target[product_type].to_f / product_count).ceil
           end
 
+          @logger.debug { "Reaction: #{reaction * repetitions.min}" }
+
+          # Add the reactants to the requirements list
+          requirements += reaction.reactants * repetitions.min
+
           # We have the products now, add them to inventory
-          reaction.product.each do |product_type, product_count|
-            inventory[product_type] += product_count
-          end
+          inventory += reaction.product * repetitions.min
         end
 
         requirements
       end
-    end
-
-    private
-
-    def remaining(requirements, inventory)
-      requirements.map do |type, count|
-        [type, count - [inventory.fetch(type, 0), 0].max]
-      end.select { |type, count| count.positive? }.to_h
-      .tap { |result| result.default = 0 }
     end
   end
 end
