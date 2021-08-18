@@ -15,7 +15,7 @@ module NanoFactory
   class Inventory
     extend Forwardable
 
-    delegate %i[each entries map] => :@contents
+    delegate %i[all? each empty? entries map] => :@contents
 
     def initialize(contents = {})
       @contents = contents

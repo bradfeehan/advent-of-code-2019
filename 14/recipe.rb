@@ -24,42 +24,64 @@ module NanoFactory
       @logger = logger
     end
 
+    def targets(from:)
+      inventory = from # change name inside method
+
+      loop do
+        requirements, created = requirements_for_target(inventory: inventory)
+        inventory = created - requirements
+
+        @logger.info { "Requirements: #{requirements}" }
+        @logger.info { "Created: #{created}" }
+        @logger.info { "Inventory: #{inventory}" }
+      end
+
+      # requirements_for_target(inventory: from)[:FUEL]
+    end
+
     def ore_for_target
-      requirements_for_target[:ORE]
+      requirements_for_target.first[:ORE]
     end
 
     private
 
-    def requirements_for_target
-      @requirements_for_target ||= begin
-        inventory = Inventory.new
-        requirements = @target.dup
+    def requirements_for_target(inventory: Inventory.new(ORE: Float::INFINITY))
+      requirements = @target.dup
+      list = []
 
-        until (target = requirements.excluding(inventory)).types.all?(:ORE)
-          reaction = reactions.find do |candidate_reaction|
-            candidate_reaction.product.types.any? do |product_type|
-              target.types.include?(product_type)
-            end
+      until (target = requirements.excluding(inventory)).empty?
+        reaction = reactions.find do |candidate_reaction|
+          candidate_reaction.reactants.select { |type, count| type == :ORE}.all? do |reactant_type, reactant_count|
+            inventory[reactant_type] >= reactant_count
+          end && candidate_reaction.product.types.any? do |product_type|
+            target.types.include?(product_type)
           end
-
-          raise 'No possible reaction' if reaction.nil?
-
-          # Repeat multiple times, enough for a product to meet a target
-          repetitions = reaction.product.map do |product_type, product_count|
-            (target[product_type].to_f / product_count).ceil
-          end
-
-          @logger.debug { "Reaction: #{reaction * repetitions.min}" }
-
-          # Add the reactants to the requirements list
-          requirements += reaction.reactants * repetitions.min
-
-          # We have the products now, add them to inventory
-          inventory += reaction.product * repetitions.min
         end
 
-        requirements
+        raise 'No possible reaction' if reaction.nil?
+
+        # Repeat multiple times, enough for a product to meet a target
+        required = reaction.product.map do |product_type, product_count|
+          (target[product_type].to_f / product_count).ceil
+        end
+
+        possible = reaction.reactants.select { |type, count| type == :ORE}.map do |reactant_type, reactant_count|
+          (inventory[reactant_type].to_f / reactant_count).floor
+        end
+
+        repetitions = [required, possible].compact.min
+
+        @logger.debug { "Reaction: #{reaction * repetitions.min}" }
+        list << reaction * repetitions.min
+
+        # Add the reactants to the requirements list
+        requirements += reaction.reactants * repetitions.min
+
+        # We have the products now, add them to inventory
+        inventory += reaction.product * repetitions.min
       end
+
+      [requirements, inventory]
     end
   end
 end

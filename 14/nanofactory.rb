@@ -23,5 +23,6 @@ target_string = target.map { |k, v| "#{v} #{k}"}.join(', ')
 puts "Ore for target #{target_string}: #{recipe.ore_for_target}"
 
 ore_count = 1_000_000_000_000
-target_count = recipe.target_count_for(ore_count: ore_count)
+# target_count = recipe.target_count_for(ore_count: ore_count)
+target_count = recipe.targets(from: NanoFactory::Inventory.new(ORE: ore_count))
 puts "With #{ore_count} ore, can make #{target_count} times"
